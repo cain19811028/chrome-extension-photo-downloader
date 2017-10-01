@@ -1,0 +1,35 @@
+﻿{
+	"extName":
+	{
+		"message": "Photo Downloader",
+		"description":"擴充套件名稱"
+	},
+	"extDescription":
+	{
+		"message": "Download Photo",
+		"description":"擴充套件描述"
+	},
+	"locale":
+	{
+		"message": "en",
+		"description":"要傳送給Google Weather API的語系編碼"
+	},
+	"loading":
+	{
+		"message": "Loading...",
+		"description":"載入資料時的popup內容"
+	},
+	"unable_to_load_data":
+	{
+		"message": "Unable to load data.",
+		"description":"資料載入錯誤時的popup內容"
+	},
+	"save":{
+		"message": "Save",
+		"description":"儲存設定"
+	},
+	"option_saved":{
+		"message": "Option saved.",
+		"description":"儲存完成"
+	}
+}
