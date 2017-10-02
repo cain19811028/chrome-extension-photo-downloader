@@ -41,50 +41,17 @@ function init(){
 
 function get_date(index){
 	var d = new Date();
-	var year = d.getFullYear().toString();
-	var month = d.getMonth() + 1;
-	if(month.toString().length == 1){
-		month = "0" + month;
-	}
-	month = month.toString();
-	var day = d.getDate().toString();
-	if(day.toString().length == 1){
-		day = "0" + day;
-	}
-	var hour = d.getHours().toString();
-	if(hour.toString().length == 1){
-		hour = "0" + hour;
-	}
-	var minute = d.getMinutes().toString();
-	if(minute.toString().length == 1){
-		minute = "0" + minute;
-	}
-	var second = d.getSeconds().toString();
-	if(second.toString().length == 1){
-		second = "0" + second;
-	}
+	var ms = d.getMilliseconds().toString();
 	if(index.toString().length == 2){
 		index = "0" + index;
 	}else if(index.toString().length == 1){
 		index = "00" + index;
 	}
-	var ms = d.getMilliseconds().toString();
-	return year + month + day + hour + minute + second + ms + index;
+	return dateFormat(d, 'yyyymmddHHMMss') + ms + index;
 }
 
 function get_directory(){
-	var d = new Date();
-	var year = d.getFullYear().toString();
-	var month = d.getMonth() + 1;
-	if(month.toString().length == 1){
-		month = "0" + month;
-	}
-	month = month.toString();
-	var day = d.getDate().toString();
-	if(day.toString().length == 1){
-		day = "0" + day;
-	}
-	return year + month + day;
+	return dateFormat(new Date(), 'yyyymmdd');
 }
 
 /* 將圖片儲存 */
