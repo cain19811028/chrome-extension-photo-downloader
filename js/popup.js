@@ -96,13 +96,13 @@ function save_photo(){
 	var dir = get_directory();
 
 	var json = '[';
-  	for(var i = 0; i < cnt; i++){
+	for(var i = 0; i < cnt; i++){
 		json = json + '{"img":"' + arr[i].split('&')[0] + '"}';
 		if(i != cnt - 1) json += ",";
 
 		chrome.downloads.download({
 			"url": arr[i].split('&')[0], "filename": dir + "/" + get_date(i) + ".jpg"
-    	}, function(){ console.log("downloaded Complete"); });
+		}, function(){ console.log("downloaded Complete"); });
 	}
 	json += ']';
 
@@ -111,9 +111,9 @@ function save_photo(){
 
 // 選擇全部圖檔路徑
 function select_all_path(){
-   	document.getElementById("tab_path").focus();
-   	document.execCommand('SelectAll');
-   	document.execCommand("Copy", false, null);
+	document.getElementById("tab_path").focus();
+	document.execCommand('SelectAll');
+	document.execCommand("Copy", false, null);
 }
 
 // 設定下載按鈕功能
