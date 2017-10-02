@@ -11,11 +11,10 @@ arr_target[2]  = "https://plus.google.com/photos/";				// Google Picasa
 arr_target[3]  = "http://photo.xuite.net/";						// Xuite
 arr_target[4]  = "http://album.blog.yam.com/";					// Yam
 arr_target[5]  = "http://gallery.dcview.com/showGallery.php";	// DCView
-arr_target[6]  = "http://www.theatlantic.com/infocus/";			// In Focus
+arr_target[6]  = "https://www.theatlantic.com/photo/";			// In Focus
 arr_target[7]  = "https://dq.yam.com/post.php";					// 地球圖輯隊
 arr_target[8]  = "https://ck101.com/";							// 卡提諾論壇
 arr_target[9]  = "https://www.jkforum.net/";					// 捷克論壇
-// arr_target[10] = "https://www.instagram.com/";				// Instagram
 
 // 初始執行，判斷是否為預設要下載的圖片網站
 function get_target(url){
@@ -179,13 +178,16 @@ function get_photo(target, data){
 			result += $(tmp).eq(i).attr("src");
 			if(i != cnt - 1) result += ",";
 		}
-	}else if(target == 6){		// In Focus（select 1280px version）
-		tmp = $(data).find(".if1280 .ifWrp img.ifImg");
+	}else if(target == 6){		// In Focus
+		tmp = $(data).find("picture source");
 		cnt = $(tmp).length;
 
 		for(var i = 0; i < cnt; i++){
-			result += $(tmp).eq(i).attr("src");
-			if(i != cnt - 1) result += ",";
+			u = $(tmp).eq(i).attr("data-srcset");
+			if(u.indexOf("1500") != -1){
+				result += u;
+				if(i != cnt - 1) result += ",";
+			}
 		}
 	}else if(target == 7){		// 地球圖輯隊
 		tmp = $(data).find(".imgWrap img.lazyImg");
@@ -252,7 +254,7 @@ chrome.tabs.onSelectionChanged.addListener(function(tabId, selectInfo){
 		target = get_target(tab.url);
 		if(target > -1){
 			chrome.tabs.executeScript(tab.id, {
-       			code: "chrome.extension.sendRequest({target: " + target + ", content: document.body.innerHTML}, function(response) { console.log('success'); });"
+				code: "chrome.extension.sendRequest({target: " + target + ", content: document.body.innerHTML}, function(response) { console.log('success'); });"
 			}, function() { console.log('done'); });
 		}
 	});
@@ -261,10 +263,10 @@ chrome.tabs.onSelectionChanged.addListener(function(tabId, selectInfo){
 chrome.webRequest.onHeadersReceived.addListener(function(details){
 	var headers = details.responseHeaders,blockingResponse = {};
     for( var i = 0, l = headers.length; i < l; ++i ){
-    	if((headers[i].name.toLowerCase() == 'content-disposition')){
-        	headers[i].value = 'attachment; filename=\"xxxx.xxxx\"';
+		if((headers[i].name.toLowerCase() == 'content-disposition')){
+			headers[i].value = 'attachment; filename=\"xxxx.xxxx\"';
             break;
-     	}
+		}
 	}
     blockingResponse.responseHeaders = headers;
     return{ responseHeaders: headers }
