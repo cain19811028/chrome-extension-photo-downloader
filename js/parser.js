@@ -8,7 +8,7 @@ var arr_target = new Array(1);
 arr_target[0]  = "https://www.facebook.com/";					// Facebook
 arr_target[1]  = "https://www.flickr.com/photos/";				// Flickr
 arr_target[2]  = "https://plus.google.com/photos/";				// Google Picasa
-arr_target[3]  = "http://photo.xuite.net/";						// Xuite
+arr_target[3]  = "http://photo.xuite.net/";						// 隨意窩（Xuite）
 arr_target[4]  = "tian.yam.com/album/";							// 蕃薯藤．天空部落（Yam）
 arr_target[5]  = "http://gallery.dcview.com/showGallery.php";	// DCView
 arr_target[6]  = "https://www.theatlantic.com/photo/";			// In Focus
@@ -132,26 +132,10 @@ function get_photo(target, data){
 		if(result.substr(result.length - 1, 1) == ","){
 			result = result.substr(0, result.length - 1);
 		}
-	}else if(target == 3){		// Xuite（原圖有問題：並須先看過原圖才能下載，下載 1024 大小無此問題）
+	}else if(target == 3){		// 隨意窩（Xuite）
 		tmp = $(data).find(".blogbody .list_area .photo_item a img");
 		cnt = $(tmp).length;
 
-		// 下載原圖大小的規則
-		/*
-		var arrUrlLevel = $(tmp).eq(0).attr("src").split("/");
-
-		// 建立原圖路徑規則
-		var newUrl = arrUrlLevel[0] + "//" + "o." + arrUrlLevel[2].split(".share.photo.").join(".photo.");
-		newUrl += "/" + arrUrlLevel[4].substr(1, 1) + "/" + arrUrlLevel[4].substr(2, 1) + "/" + arrUrlLevel[4].substr(3, 1) + "/" + arrUrlLevel[4].substr(4, 1);
-		newUrl += "/" + arrUrlLevel[3] + "/" + arrUrlLevel[5];
-
-		for(var i = 0; i < cnt; i++){
-			result += newUrl + "/" + $(tmp).eq(i).attr("src").split("/")[6].split("_c.").join(".");
-			if(i != cnt - 1) result += ",";
-		}
-		*/
-
-		// 下載 1024 大小的規則
 		for(var i = 0; i < cnt; i++){
 			result += $(tmp).eq(i).attr("src").split("_c.").join("_x.");
 			if(i != cnt - 1) result += ",";
