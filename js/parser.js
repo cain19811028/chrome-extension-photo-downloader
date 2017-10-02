@@ -9,7 +9,7 @@ arr_target[0]  = "https://www.facebook.com/";					// Facebook
 arr_target[1]  = "https://www.flickr.com/photos/";				// Flickr
 arr_target[2]  = "https://plus.google.com/photos/";				// Google Picasa
 arr_target[3]  = "http://photo.xuite.net/";						// Xuite
-arr_target[4]  = "http://album.blog.yam.com/";					// Yam
+arr_target[4]  = "tian.yam.com/album/";							// 蕃薯藤．天空部落（Yam）
 arr_target[5]  = "http://gallery.dcview.com/showGallery.php";	// DCView
 arr_target[6]  = "https://www.theatlantic.com/photo/";			// In Focus
 arr_target[7]  = "https://dq.yam.com/post.php";					// 地球圖輯隊
@@ -29,7 +29,7 @@ function get_target(url){
 			for(var i = 0; i < 4; i++){
 				new_url += arr_url[i] + "/";
 			}
-		}else if(arr_url[2] == "ck101.com" || arr_url[2] == "photo.xuite.net" || arr_url[2] == "album.blog.yam.com" || arr_url[2] == "www.jkforum.net"){
+		}else if(arr_url[2] == "ck101.com" || arr_url[2] == "photo.xuite.net" || arr_url[2] == "www.jkforum.net"){
 			for(var i = 0; i < 3; i++){
 				new_url += arr_url[i] + "/";
 			}
@@ -45,6 +45,12 @@ function get_target(url){
 			for(var i = 0; i < 4; i++){
 				new_url += arr_url[i] + "/";
 			}
+		}else if(arr_url[2].indexOf("tian.yam.com") != -1 && arr_url[3] == "album"){
+			for(var i = 2; i < 4; i++){
+				new_url += arr_url[i] + "/";
+			}
+			var account = new_url.split(".")[0];
+			new_url = new_url.replace(account + ".", "");
 		}
 
 		target = jQuery.inArray(new_url, arr_target);
@@ -150,25 +156,13 @@ function get_photo(target, data){
 			result += $(tmp).eq(i).attr("src").split("_c.").join("_x.");
 			if(i != cnt - 1) result += ",";
 		}
-	}else if(target == 4){		// Yam（有問題：並須先看過大圖才能下載）
-		tmp = $(data).find("div#photobody .photo a img");
+	}else if(target == 4){		// 蕃薯藤．天空部落（Yam）
+		tmp = $(data).find("div.photos div.inner-wrap img");
 		cnt = $(tmp).length;
 
-		if(cnt != 0){
-			// 我的相簿
-			for(var i = 0; i < cnt; i++){
-				result += $(tmp).eq(i).attr("src").split("/t_").join("/");
-				if(i != cnt - 1) result += ",";
-			}
-		}else{
-			// 他人相簿
-			tmp = $(data).find(".albumShow a img");
-			cnt = $(tmp).length;
-
-			for(var i = 0; i < cnt; i++){
-				result += $(tmp).eq(i).attr("src").split("/t_").join("/");
-				if(i != cnt - 1) result += ",";
-			}
+		for(var i = 0; i < cnt; i++){
+			result += $(tmp).eq(i).attr("src");
+			if(i != cnt - 1) result += ",";
 		}
 	}else if(target == 5){		// DCView
 		tmp = $(data).find(".photomain img");

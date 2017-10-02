@@ -9,7 +9,7 @@
 | Flickr | https://www.flickr.com/photos/ |
 | Google Picasa | https://plus.google.com/photos/ |
 | Xuite | http://photo.xuite.net/ |
-| Yam | http://album.blog.yam.com/ |
+| 蕃薯藤．天空部落（Yam） | http://xxxxx.tian.yam.com/album/ |
 | DCView | http://gallery.dcview.com/ |
 | In Focus | https://www.theatlantic.com/photo/ |
 | 地球圖輯隊 | https://dq.yam.com/ |
