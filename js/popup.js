@@ -22,12 +22,10 @@ function init(){
 			if(arr[i]){
 				tmp = tmp + "<td><img width=200 src='" + arr[i].split("%2C").join(",") + "'></td>";
 				list = list + "<tr><td>" + arr[i].split("%2C").join(",") +"</td></tr>";
-				//console.log("i = " + i + " : " + arr[i]);
 			}
 			if(arr[idx]){
 				tmp = tmp + "<td><img width=200 src='" + arr[idx].split("%2C").join(",") + "'></td>";
 				list = list + "<tr><td>" + arr[idx].split("%2C").join(",") +"</td></tr>";
-				//console.log("idx = " + idx + " : " + arr[idx]);
 			}else{
 				tmp = tmp + "<td>　</td>";
 			}

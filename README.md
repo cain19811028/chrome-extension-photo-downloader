@@ -11,7 +11,7 @@
 | Xuite | http://photo.xuite.net/ |
 | Yam | http://album.blog.yam.com/ |
 | DCView | http://gallery.dcview.com/ |
-| In Focus | http://www.theatlantic.com/infocus/ |
+| In Focus | https://www.theatlantic.com/photo/ |
 | 地球圖輯隊 | https://dq.yam.com/ |
 | 卡提諾論壇 | https://ck101.com/ |
 | 捷克論壇 | https://www.jkforum.net/ |
