@@ -9,7 +9,7 @@
 | ------ | ------ |
 | Facebook | https://www.facebook.com/ |
 | Flickr | https://www.flickr.com/photos/ |
-| Google Picasa | https://plus.google.com/photos/ |
+| Google Plus 相簿 | https://plus.google.com/photos/ |
 | 隨意窩（Xuite） | http://photo.xuite.net/ |
 | 蕃薯藤．天空部落（Yam） | https://xxxxx.tian.yam.com/album/ |
 | DCView | http://gallery.dcview.com/ |

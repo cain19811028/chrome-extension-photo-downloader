@@ -7,7 +7,7 @@ var arr_photo = [];
 var arr_target = new Array(1);
 arr_target[0]  = "https://www.facebook.com/";					// Facebook
 arr_target[1]  = "https://www.flickr.com/photos/";				// Flickr
-arr_target[2]  = "https://plus.google.com/photos/";				// Google Picasa
+arr_target[2]  = "https://plus.google.com/photos/";				// Google Plus 相簿
 arr_target[3]  = "http://photo.xuite.net/";						// 隨意窩（Xuite）
 arr_target[4]  = "tian.yam.com/album/";							// 蕃薯藤．天空部落（Yam）
 arr_target[5]  = "http://gallery.dcview.com/showGallery.php";	// DCView
@@ -41,7 +41,7 @@ function get_target(url){
 			for(var i = 0; i < 4; i++){
 				new_url += arr_url[i] + "/";
 			}
-		}else if(arr_url[2] == "plus.google.com" && arr_url[3] == "photos" && arr_url[5] == "albums"){
+		}else if(arr_url[2] == "plus.google.com" && arr_url[3] == "photos" && arr_url[5] == "album"){
 			for(var i = 0; i < 4; i++){
 				new_url += arr_url[i] + "/";
 			}
@@ -118,7 +118,7 @@ function get_photo(target, data){
 			result += "http:" + u;
 			if(i != cnt - 1) result += ",";
 		}
-	}else if(target == 2){		// Google Picasa
+	}else if(target == 2){		// Google Plus 相簿
 		$.ajax({
 		   	type: "GET",
 		   	url: "https://picasaweb.google.com/data/feed/api/user/" + target_url.split("/")[4] + "/albumid/" + target_url.split("/")[6].split("?")[0],
