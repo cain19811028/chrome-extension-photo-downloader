@@ -39,7 +39,7 @@ function init(){
 	}
 }
 
-function get_date(index){
+function getFileName(index){
 	var d = new Date();
 	var ms = d.getMilliseconds().toString();
 	if(index.toString().length == 2){
@@ -50,15 +50,15 @@ function get_date(index){
 	return dateFormat(d, 'yyyymmddHHMMss') + ms + index;
 }
 
-function get_directory(){
+function getDirectory(){
 	return dateFormat(new Date(), 'yyyymmdd');
 }
 
 /* 將圖片儲存 */
-function save_photo(){
+function savePhoto(){
 	var arr = result.split(',');
 	var cnt = arr.length;
-	var dir = get_directory();
+	var dir = getDirectory();
 
 	var json = '[';
 	for(var i = 0; i < cnt; i++){
@@ -66,8 +66,8 @@ function save_photo(){
 		if(i != cnt - 1) json += ",";
 
 		chrome.downloads.download({
-			"url": arr[i].split('&')[0], "filename": dir + "/" + get_date(i) + ".jpg"
-		}, function(){ console.log("downloaded Complete"); });
+			"url": arr[i].split('&')[0], "filename": dir + "/" + getFileName(i) + ".jpg"
+		}, function(){ console.log("Complete"); });
 	}
 	json += ']';
 
@@ -75,14 +75,14 @@ function save_photo(){
 }
 
 // 選擇全部圖檔路徑
-function select_all_path(){
+function selectAllPath(){
 	document.getElementById("tab_path").focus();
 	document.execCommand('SelectAll');
 	document.execCommand("Copy", false, null);
 }
 
 // 設定下載按鈕功能
-document.getElementById("btn_save").addEventListener("click", save_photo);
+document.getElementById("btn_save").addEventListener("click", savePhoto);
 
 // 設定全選按鈕功能
-document.getElementById("btn_select").addEventListener("click", select_all_path);
+document.getElementById("btn_select").addEventListener("click", selectAllPath);

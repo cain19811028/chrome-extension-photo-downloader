@@ -17,7 +17,7 @@ arr_target[8]  = "https://ck101.com/";							// 卡提諾論壇
 arr_target[9]  = "https://www.jkforum.net/";					// 捷克論壇
 
 // 初始執行，判斷是否為預設要下載的圖片網站
-function get_target(url){
+function getTarget(url){
 
 	target = jQuery.inArray(url.split("?")[0], arr_target);
 
@@ -61,7 +61,7 @@ function get_target(url){
 }
 
 // 取得圖片連結網址
-function get_photo(target, data){
+function getPhoto(target, data){
 	var u = "";
 	var dom = "";
 	var tmp = "";
@@ -213,24 +213,17 @@ function get_photo(target, data){
 	}
 }
 
-// 取得網頁原始碼中的註解內容
-$.fn.getComments = function () {
-    return this.contents().map(function () {
-        if (this.nodeType === 8) return this.nodeValue;
-    }).get();
-}
-
 // 載入網頁時取得 BODY 內容
 chrome.extension.onRequest.addListener(
 	function(request, sender, sendResponse){
-    	get_photo(request.target, request.content)
+    	getPhoto(request.target, request.content)
 	}
 );
 
 // 網頁重新整理時
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
 	if (changeInfo.status == "complete"){
-		target = get_target(tab.url);
+		target = getTarget(tab.url);
     	if(target > -1){
     		chrome.tabs.executeScript(tab.id, {
        			code: "chrome.extension.sendRequest({target: " + target + ", content: document.body.innerHTML}, function(response) { console.log('success'); });"
@@ -244,7 +237,7 @@ chrome.tabs.onSelectionChanged.addListener(function(tabId, selectInfo){
 	var winId = selectInfo.windowId;	// 目前用不到，結果都是 1
 	// 取得目前選取 Tab 的網址
 	chrome.tabs.getSelected(winId, function(tab){
-		target = get_target(tab.url);
+		target = getTarget(tab.url);
 		if(target > -1){
 			chrome.tabs.executeScript(tab.id, {
 				code: "chrome.extension.sendRequest({target: " + target + ", content: document.body.innerHTML}, function(response) { console.log('success'); });"
