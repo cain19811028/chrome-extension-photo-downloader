@@ -33,7 +33,7 @@ function get_target(url){
 			for(var i = 0; i < 3; i++){
 				new_url += arr_url[i] + "/";
 			}
-		}else if((arr_url[2] == "www.facebook.com" && arr_url[4] == "media_set") || (arr_url[2] == "www.facebook.com" && arr_url[3] == "media" && arr_url[4] == "set")){
+		}else if((arr_url[2] == "www.facebook.com" && arr_url[4] == "media_set") || (arr_url[2] == "www.facebook.com" && arr_url[3] == "media" && arr_url[4] == "set") || (arr_url[2] == "www.facebook.com" && arr_url[5] == "photos")){
 			for(var i = 0; i < 3; i++){
 				new_url += arr_url[i] + "/";
 			}
@@ -69,32 +69,16 @@ function get_photo(target, data){
 	var link = "";
 	result = "";
 
-	if(target == 0){			// Facebook
-		tmp = $(data).find(".fbPhotosRedesignBorderOverlay .fbStarGrid .fbPhotoCurationControlWrapper .uiMediaThumb");
+	if(target == 0){			// Facebook（目前只支援有高解析 _o 的原始圖檔）
+		tmp = $(data).find("div.mtm a");
 		cnt = $(tmp).length;
-
-		var directory = "";
-		var temp_url = new Array();
 		for(var i = 0; i < cnt; i++){
-			u = $(tmp).eq(i).attr("ajaxify").split('src=')[1].split('&smallsrc=')[0];
-			u = u.split("https").join("http").split("%26").join("&").split("%2F").join("/").split("%3A").join(":").split("%3D").join("=").split("%3F").join("?");
-			u = u.split('&small')[0].split('&size')[0].split('&__gda__')[0];
-			if(directory == "" && u.indexOf(".fbcdn.net/") != -1){
-				directory = u.split('.fbcdn.net/')[0];
-			}
-
-			if(u.indexOf(".fbcdn.net/") != -1){
-				temp_url.push(u.split('.fbcdn.net/')[1]);
-			}else if(u.indexOf(".akamaihd.net/") != -1){
-				temp_url.push(u.split('.akamaihd.net/')[1]);
+			u = $(tmp).eq(i).attr("data-ploi");
+			if(u != undefined){
+				result += u;
+				if(i != cnt - 1) result += ",";
 			}
 		}
-
-		for(var i = 0; i < cnt; i++){
-			result += directory + ".fbcdn.net/" + temp_url[i].split("-ak").join("");
-			if(i != cnt - 1) result += ",";
-		}
-
 	}else if(target == 1){		// Flickr
 		var obj = jQuery.parseJSON($(data).text().split("Y.listData = ")[1].split("try{")[0].split(" ").join("").split("};").join("}"));
 		var cnt = 0, rows = obj.rows, row = null;
@@ -203,6 +187,13 @@ function get_photo(target, data){
 			if(i != cnt - 1) result += ",";
 		}
 	}
+}
+
+// 取得網頁原始碼中的註解內容
+$.fn.getComments = function () {
+    return this.contents().map(function () {
+        if (this.nodeType === 8) return this.nodeValue;
+    }).get();
 }
 
 // 載入網頁時取得 BODY 內容
