@@ -69,14 +69,33 @@ function get_photo(target, data){
 	var link = "";
 	result = "";
 
-	if(target == 0){			// Facebook（目前只支援有高解析 _o 的原始圖檔）
+	if(target == 0){			// Facebook
+		// 針對 _o 的高解析圖檔做處理
+		var key = [];
 		tmp = $(data).find("div.mtm a");
 		cnt = $(tmp).length;
 		for(var i = 0; i < cnt; i++){
 			u = $(tmp).eq(i).attr("data-ploi");
 			if(u != undefined){
+				key.push(u.split("/")[5].split("_o")[0].split("_n")[0]);
 				result += u;
 				if(i != cnt - 1) result += ",";
+			}
+		}
+
+		// 針對 _n 的小尺寸圖檔做處理
+		tmp = $(data).find("div.fbPhotosRedesignBorderOverlay a img");
+		cnt = $(tmp).length;
+		if(cnt > 0 && result != "") result += ",";
+		for(var i = 0; i < cnt; i++){
+			u = $(tmp).eq(i).attr("style");
+			if(u != undefined){
+				u = u.split("url(")[1].split(");")[0];
+				u = u.split("\\3d ").join("=").replace("\\26 ", "&").replace("\\3a ", ":");
+				if($.inArray(u.split("/")[6].split("_o")[0].split("_n")[0], key) == -1){
+					result += u;
+					if(i != cnt - 1) result += ",";
+				}
 			}
 		}
 	}else if(target == 1){		// Flickr
