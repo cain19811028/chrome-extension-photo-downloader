@@ -33,7 +33,7 @@ function init(){
 		}
 
 		$("#photo table").html(tmp);
-		$("#list table").html(list);
+		$("#list table tbody").html(list);
 		$("#info").show();
 		$("#warning").hide();
 	}

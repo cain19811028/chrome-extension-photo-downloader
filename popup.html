@@ -1,18 +1,18 @@
 <html>
 <head>
 <meta charset="utf-8" />
-<link type="text/css" rel="stylesheet" href="css/style.css" /> 
+<link type="text/css" rel="stylesheet" href="css/bootstrap.css" />
 </head>
 <body>
 	<div id="main" style="width:450px; height:620px">
 		<div id="info">
 			<form id="frm_player" name="frm_player" >
-				<input id="btn_save" type="button" value="開始寫入">
+				<button id="btn_save" type="button" class="btn btn-primary">下載</button>
 			</form>
-			<div id="photo"><table border=1></table></div>
+			<div id="photo"><table class="table table-inverse"></table></div>
 			<p><hr></p>
-			<input id="btn_select" type="button" value="全選">
-			<div id="list"><table id="tab_path" border=1></table></div>
+			<button id="btn_select" type="button" class="btn btn-primary">全選</button>
+			<div id="list"><table id="tab_path" class="table table-striped"><tbody></tbody></table></div>
 		</div>
 		<div id="warning">非指定頁面，無法取得資料</div>
 	</div>
