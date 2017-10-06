@@ -33,7 +33,7 @@ function get_target(url){
 			for(var i = 0; i < 3; i++){
 				new_url += arr_url[i] + "/";
 			}
-		}else if((arr_url[2] == "www.facebook.com" && arr_url[4] == "media_set") || (arr_url[2] == "www.facebook.com" && arr_url[3] == "media" && arr_url[4] == "set") || (arr_url[2] == "www.facebook.com" && arr_url[5] == "photos")){
+		}else if((arr_url[2] == "www.facebook.com" && arr_url[4] == "media_set") || (arr_url[2] == "www.facebook.com" && arr_url[3] == "media" && arr_url[4] == "set")){
 			for(var i = 0; i < 3; i++){
 				new_url += arr_url[i] + "/";
 			}
@@ -69,7 +69,7 @@ function get_photo(target, data){
 	var link = "";
 	result = "";
 
-	if(target == 0){			// Facebook
+	if(target == 0){			// Facebook（目前無法下載粉絲專業相簿照片）
 		// 針對 _o 的高解析圖檔做處理
 		var key = [];
 		tmp = $(data).find("div.mtm a");
@@ -99,19 +99,24 @@ function get_photo(target, data){
 			}
 		}
 	}else if(target == 1){		// Flickr
-		var obj = jQuery.parseJSON($(data).text().split("Y.listData = ")[1].split("try{")[0].split(" ").join("").split("};").join("}"));
-		var cnt = 0, rows = obj.rows, row = null;
-		var rowCount = rows.length;
-		for(var i = 0; i < rowCount; i++){
-			row = rows[i].row;
-			cnt = row.length
-			for(var j = 0; j < cnt; j++){
-				result += row[j].sizes.o.url + ",";
-			}
-		}
+		// 先取得 JSON 格式內容
+		tmp = $(data).text().split("modelExport: ")[1].split("auth: auth")[0];
+		var lastIndex = tmp.lastIndexOf(",");
+		tmp = tmp.substring(0, lastIndex);
 
-		if(result.substr(result.length - 1, 1) == ","){
-			result = result.substr(0, result.length - 1);
+		// 再處理 JSON 內容取得圖片路徑
+		var obj = jQuery.parseJSON(tmp);
+		obj = obj["set-models"][0]["photoPageList"]["_data"];
+		cnt = $(obj).length;
+		for(var i = 0; i < cnt; i++){
+			u = obj[i]["sizes"];
+			if(u["k"] != undefined){
+				u = u["k"]["displayUrl"];
+			}else if(u["k"] == undefined && u["l"] != undefined){
+				u = u["l"]["displayUrl"];
+			}
+			result += "http:" + u;
+			if(i != cnt - 1) result += ",";
 		}
 	}else if(target == 2){		// Google Picasa
 		$.ajax({
