@@ -1,60 +1,59 @@
 var json = "";
 var result = "";
 var target = -1;
-var target_url = "";
-var json_photo = "";
-var arr_photo = [];
-var arr_target = new Array(1);
-arr_target[0]  = "https://www.facebook.com/";					// Facebook
-arr_target[1]  = "https://www.flickr.com/photos/";				// Flickr
-arr_target[2]  = "https://plus.google.com/photos/";				// Google Plus 相簿
-arr_target[3]  = "http://photo.xuite.net/";						// 隨意窩（Xuite）
-arr_target[4]  = "tian.yam.com/album/";							// 蕃薯藤．天空部落（Yam）
-arr_target[5]  = "http://gallery.dcview.com/showGallery.php";	// DCView
-arr_target[6]  = "https://www.theatlantic.com/photo/";			// In Focus
-arr_target[7]  = "https://dq.yam.com/post.php";					// 地球圖輯隊
-arr_target[8]  = "https://ck101.com/";							// 卡提諾論壇
-arr_target[9]  = "https://www.jkforum.net/";					// 捷克論壇
+var targetUrl = "";
+var targetArray = [
+	"https://www.facebook.com/",					// Facebook
+	"https://www.flickr.com/photos/",				// Flickr
+	"https://plus.google.com/photos/",				// Google Plus 相簿
+	"http://photo.xuite.net/",						// 隨意窩（Xuite）
+	"tian.yam.com/album/",							// 蕃薯藤．天空部落（Yam）
+	"http://gallery.dcview.com/showGallery.php",	// DCView
+	"https://www.theatlantic.com/photo/",			// In Focus
+	"https://dq.yam.com/post.php",					// 地球圖輯隊
+	"https://ck101.com/",							// 卡提諾論壇
+	"https://www.jkforum.net/"						// 捷克論壇
+];
 
 // 初始執行，判斷是否為預設要下載的圖片網站
 function getTarget(url){
 
-	target = jQuery.inArray(url.split("?")[0], arr_target);
+	target = jQuery.inArray(url.split("?")[0], targetArray);
 
 	if(target == -1){
-		var new_url = "";
-		var arr_url = url.split("?")[0].split("/");
+		var newUrl = "";
+		var urlBlock = url.split("?")[0].split("/");
 
-		if(arr_url[2] == "www.theatlantic.com"){
+		if(urlBlock[2] == "www.theatlantic.com"){
 			for(var i = 0; i < 4; i++){
-				new_url += arr_url[i] + "/";
+				newUrl += urlBlock[i] + "/";
 			}
-		}else if(arr_url[2] == "ck101.com" || arr_url[2] == "photo.xuite.net" || arr_url[2] == "www.jkforum.net"){
+		}else if(urlBlock[2] == "ck101.com" || urlBlock[2] == "photo.xuite.net" || urlBlock[2] == "www.jkforum.net"){
 			for(var i = 0; i < 3; i++){
-				new_url += arr_url[i] + "/";
+				newUrl += urlBlock[i] + "/";
 			}
-		}else if((arr_url[2] == "www.facebook.com" && arr_url[4] == "media_set") || (arr_url[2] == "www.facebook.com" && arr_url[3] == "media" && arr_url[4] == "set")){
+		}else if((urlBlock[2] == "www.facebook.com" && urlBlock[4] == "media_set") || (urlBlock[2] == "www.facebook.com" && urlBlock[3] == "media" && urlBlock[4] == "set")){
 			for(var i = 0; i < 3; i++){
-				new_url += arr_url[i] + "/";
+				newUrl += urlBlock[i] + "/";
 			}
-		}else if(arr_url[2] == "www.flickr.com" && arr_url[3] == "photos" && arr_url[5] == "sets"){
+		}else if(urlBlock[2] == "www.flickr.com" && urlBlock[3] == "photos" && urlBlock[5] == "sets"){
 			for(var i = 0; i < 4; i++){
-				new_url += arr_url[i] + "/";
+				newUrl += urlBlock[i] + "/";
 			}
-		}else if(arr_url[2] == "plus.google.com" && arr_url[3] == "photos" && arr_url[5] == "album"){
+		}else if(urlBlock[2] == "plus.google.com" && urlBlock[3] == "photos" && urlBlock[5] == "album"){
 			for(var i = 0; i < 4; i++){
-				new_url += arr_url[i] + "/";
+				newUrl += urlBlock[i] + "/";
 			}
-		}else if(arr_url[2].indexOf("tian.yam.com") != -1 && arr_url[3] == "album"){
+		}else if(urlBlock[2].indexOf("tian.yam.com") != -1 && urlBlock[3] == "album"){
 			for(var i = 2; i < 4; i++){
-				new_url += arr_url[i] + "/";
+				newUrl += urlBlock[i] + "/";
 			}
-			var account = new_url.split(".")[0];
-			new_url = new_url.replace(account + ".", "");
+			var account = newUrl.split(".")[0];
+			newUrl = newUrl.replace(account + ".", "");
 		}
 
-		target = jQuery.inArray(new_url, arr_target);
-		target_url = url;
+		target = jQuery.inArray(newUrl, targetArray);
+		targetUrl = url;
 	}
 
 	return target;
@@ -62,66 +61,60 @@ function getTarget(url){
 
 // 取得圖片連結網址
 function getPhoto(target, data){
-	var u = "";
-	var dom = "";
-	var tmp = "";
-	var cnt = 0;
 	var link = "";
+	var temp = "";
+	var count = 0;
+	var photo = [];
 	result = "";
 
 	if(target == 0){			// Facebook（目前無法下載粉絲專業相簿照片）
 		// 針對 _o 的高解析圖檔做處理
 		var key = [];
-		tmp = $(data).find("div.mtm a");
-		cnt = $(tmp).length;
-		for(var i = 0; i < cnt; i++){
-			u = $(tmp).eq(i).attr("data-ploi");
-			if(u != undefined){
-				key.push(u.split("/")[5].split("_o")[0].split("_n")[0]);
-				result += u;
-				if(i != cnt - 1) result += ",";
+		temp = $(data).find("div.mtm a");
+		count = $(temp).length;
+		for(var i = 0; i < count; i++){
+			link = $(temp).eq(i).attr("data-ploi");
+			if(link != undefined){
+				key.push(link.split("/")[5].split("_o")[0].split("_n")[0]);
+				photo.push(link);
 			}
 		}
 
 		// 針對 _n 的小尺寸圖檔做處理
-		tmp = $(data).find("div.fbPhotosRedesignBorderOverlay a img");
-		cnt = $(tmp).length;
-		if(cnt > 0 && result != "") result += ",";
-		for(var i = 0; i < cnt; i++){
-			u = $(tmp).eq(i).attr("style");
-			if(u != undefined){
-				u = u.split("url(")[1].split(");")[0];
-				u = u.split("\\3d ").join("=").replace("\\26 ", "&").replace("\\3a ", ":");
-				if($.inArray(u.split("/")[6].split("_o")[0].split("_n")[0], key) == -1){
-					result += u;
-					if(i != cnt - 1) result += ",";
+		temp = $(data).find("div.fbPhotosRedesignBorderOverlay a img");
+		count = $(temp).length;
+		for(var i = 0; i < count; i++){
+			link = $(temp).eq(i).attr("style");
+			if(link != undefined){
+				link = link.split("url(")[1].split(");")[0];
+				link = link.split("\\3d ").join("=").replace("\\26 ", "&").replace("\\3a ", ":");
+				if($.inArray(link.split("/")[6].split("_o")[0].split("_n")[0], key) == -1){
+					photo.push(link);
 				}
 			}
 		}
 	}else if(target == 1){		// Flickr
 		// 先取得 JSON 格式內容
-		tmp = $(data).text().split("modelExport: ")[1].split("auth: auth")[0];
-		var lastIndex = tmp.lastIndexOf(",");
-		tmp = tmp.substring(0, lastIndex);
+		temp = $(data).text().split("modelExport: ")[1].split("auth: auth")[0];
+		temp = temp.substring(0, temp.lastIndexOf(","));
 
 		// 再處理 JSON 內容取得圖片路徑
-		var obj = jQuery.parseJSON(tmp);
+		var obj = jQuery.parseJSON(temp);
 		obj = obj["set-models"][0]["photoPageList"]["_data"];
-		cnt = $(obj).length;
-		for(var i = 0; i < cnt; i++){
-			u = obj[i]["sizes"];
-			if(u["k"] != undefined){
-				u = u["k"]["displayUrl"];
-			}else if(u["k"] == undefined && u["l"] != undefined){
-				u = u["l"]["displayUrl"];
+		count = $(obj).length;
+		for(var i = 0; i < count; i++){
+			link = obj[i]["sizes"];
+			if(link["k"] != undefined){
+				link = link["k"]["displayUrl"];
+			}else if(link["k"] == undefined && link["l"] != undefined){
+				link = link["l"]["displayUrl"];
 			}
-			result += "http:" + u;
-			if(i != cnt - 1) result += ",";
+			photo.push("http:" + link);
 		}
 	}else if(target == 2){		// Google Plus 相簿
 		$.ajax({
 		   	type: "GET",
-		   	url: "https://picasaweb.google.com/data/feed/api/user/" + target_url.split("/")[4] + "/albumid/" + target_url.split("/")[6].split("?")[0],
+		   	url: "https://picasaweb.google.com/data/feed/api/user/" + targetUrl.split("/")[4] + "/albumid/" + targetUrl.split("/")[6].split("?")[0],
 		   	data: "imgmax=2048",
 		   	dataType: "xml",
 		   	success: function(xml){
@@ -129,88 +122,80 @@ function getPhoto(target, data){
 		   			$($(this).children().last()).each(function(){
 		   				$($(this).children()).each(function(){
 		   					if($(this).attr("url") != undefined && $(this).attr("url").indexOf("s2048") != -1){
-		   						result += $(this).attr("url") + ",";
+		   						photo.push($(this).attr("url"));
+		   						result = photo.join();
 		   					}
 		   				});
 		   			});
 	            });
 		   	}
 		});
-
-		if(result.substr(result.length - 1, 1) == ","){
-			result = result.substr(0, result.length - 1);
-		}
 	}else if(target == 3){		// 隨意窩（Xuite）
-		tmp = $(data).find(".blogbody .list_area .photo_item a img");
-		cnt = $(tmp).length;
+		temp = $(data).find(".blogbody .list_area .photo_item a img");
+		count = $(temp).length;
 
-		for(var i = 0; i < cnt; i++){
-			result += $(tmp).eq(i).attr("src").split("_c.").join("_x.");
-			if(i != cnt - 1) result += ",";
+		for(var i = 0; i < count; i++){
+			photo.push($(temp).eq(i).attr("src").split("_c.").join("_x."));
 		}
 	}else if(target == 4){		// 蕃薯藤．天空部落（Yam）
-		tmp = $(data).find("div.photos div.inner-wrap img");
-		cnt = $(tmp).length;
+		temp = $(data).find("div.photos div.inner-wrap img");
+		count = $(temp).length;
 
-		for(var i = 0; i < cnt; i++){
-			result += $(tmp).eq(i).attr("src");
-			if(i != cnt - 1) result += ",";
+		for(var i = 0; i < count; i++){
+			photo.push($(temp).eq(i).attr("src"));
 		}
 	}else if(target == 5){		// DCView
-		tmp = $(data).find(".photomain img");
-		cnt = $(tmp).length;
+		temp = $(data).find(".photomain img");
+		count = $(temp).length;
 
-		for(var i = 0; i < cnt; i++){
-			result += $(tmp).eq(i).attr("src");
-			if(i != cnt - 1) result += ",";
+		for(var i = 0; i < count; i++){
+			photo.push($(temp).eq(i).attr("src"));
 		}
 	}else if(target == 6){		// In Focus
-		tmp = $(data).find("picture source");
-		cnt = $(tmp).length;
+		temp = $(data).find("picture source");
+		count = $(temp).length;
 
-		for(var i = 0; i < cnt; i++){
-			u = $(tmp).eq(i).attr("data-srcset");
-			if(u.indexOf("1500") != -1){
-				result += u;
-				if(i != cnt - 1) result += ",";
+		for(var i = 0; i < count; i++){
+			link = $(temp).eq(i).attr("data-srcset");
+			if(link.indexOf("1500") != -1){
+				photo.push(link);
 			}
 		}
 	}else if(target == 7){		// 地球圖輯隊
-		tmp = $(data).find(".imgWrap img.lazyImg");
-		cnt = $(tmp).length;
+		temp = $(data).find(".imgWrap img.lazyImg");
+		count = $(temp).length;
 
-		for(var i = 0; i < cnt; i++){
-			result += $(tmp).eq(i).attr("src")
-			if(i != cnt - 1) result += ",";
+		for(var i = 0; i < count; i++){
+			photo.push($(temp).eq(i).attr("src"));
 		}
 	}else if(target == 8){		// 卡提諾論壇
-		tmp = $(data).find("ignore_js_op img");
-		cnt = $(tmp).length;
+		temp = $(data).find("ignore_js_op img");
+		count = $(temp).length;
 
-		if(cnt == 0){
-			tmp = $(data).find("img.zoom");
-			cnt = $(tmp).length;
+		if(count == 0){
+			temp = $(data).find("img.zoom");
+			count = $(temp).length;
 		}
 
-		for(var i = 0; i < cnt; i++){
-			if($(tmp).eq(i).attr("src") != undefined){
-				result += $(tmp).eq(i).attr("src");
-				if(i != cnt - 1) result += ",";
+		for(var i = 0; i < count; i++){
+			if($(temp).eq(i).attr("src") != undefined){
+				photo.push($(temp).eq(i).attr("src"));
 			}
 		}
 	}else if(target == 9){		// 捷克論壇
-		tmp = $(data).find("ignore_js_op img");
-		cnt = $(tmp).length;
+		temp = $(data).find("ignore_js_op img");
+		count = $(temp).length;
 
-		for(var i = 0; i < cnt; i++){
-			u = $(tmp).eq(i).attr("src");
-			if(u.indexOf("mymypic.net") == -1){
-				u = "https://www.jkforum.net" + u;
+		for(var i = 0; i < count; i++){
+			link = $(temp).eq(i).attr("src");
+			if(link.indexOf("mymypic.net") == -1){
+				link = "https://www.jkforum.net" + link;
 			}
-			result += u;
-			if(i != cnt - 1) result += ",";
+			photo.push(link);
 		}
 	}
+
+	result = photo.join();
 }
 
 // 載入網頁時取得 BODY 內容

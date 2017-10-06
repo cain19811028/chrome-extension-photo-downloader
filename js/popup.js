@@ -5,38 +5,39 @@ init();
 
 /* 頁面初始化，載入 parser 圖片 */
 function init(){
-	var tmp = "";
-	var list = "";
-	var idx = 0;
+	var list = "";	// 用來暫存取到的圖片網址
+	var temp = "";	// 用來暫存預覽圖
 
 	if(target == -1){
 		$("#info").hide();
 		$("#warning").show();
 	}else{
-		var arr = result.split(',');
-		var cnt = arr.length;
+		var array = result.split(',');
+		var count = array.length;
 
-		for(var i = 0; i < cnt; i=i+2){
-			idx = i + 1;
-			tmp = tmp + "<tr>";
-			if(arr[i]){
-				tmp = tmp + "<td><img width=200 src='" + arr[i].split("%2C").join(",") + "'></td>";
-				list = list + "<tr><td>" + arr[i].split("%2C").join(",") +"</td></tr>";
+		for(var i = 0, j = 0; i < count; i=i+2){
+			j = i + 1;
+			if(array[i]){
+				temp += "<tr><td><img width=200 src='" + array[i] + "'></td>";
+				list += "<tr><td>" + array[i] +"</td></tr>";
 			}
-			if(arr[idx]){
-				tmp = tmp + "<td><img width=200 src='" + arr[idx].split("%2C").join(",") + "'></td>";
-				list = list + "<tr><td>" + arr[idx].split("%2C").join(",") +"</td></tr>";
+			if(array[j]){
+				temp += "<td><img width=200 src='" + array[j] + "'></td></tr>";
+				list += "<tr><td>" + array[j] +"</td></tr>";
 			}else{
-				tmp = tmp + "<td>　</td>";
+				temp += "<td>　</td></tr>";
 			}
-			tmp = tmp + "</tr>";
 		}
 
-		$("#photo table").html(tmp);
+		$("#photo table").html(temp);
 		$("#list table tbody").html(list);
 		$("#info").show();
 		$("#warning").hide();
 	}
+}
+
+function getFolderName(){
+	return dateFormat(new Date(), 'yyyymmdd');
 }
 
 function getFileName(index){
@@ -50,23 +51,18 @@ function getFileName(index){
 	return dateFormat(d, 'yyyymmddHHMMss') + ms + index;
 }
 
-function getDirectory(){
-	return dateFormat(new Date(), 'yyyymmdd');
-}
-
 /* 將圖片儲存 */
 function savePhoto(){
-	var arr = result.split(',');
-	var cnt = arr.length;
-	var dir = getDirectory();
+	var array = result.split(',');
+	var count = array.length;
 
 	var json = '[';
-	for(var i = 0; i < cnt; i++){
-		json = json + '{"img":"' + arr[i].split('&')[0] + '"}';
-		if(i != cnt - 1) json += ",";
+	for(var i = 0; i < count; i++){
+		json = json + '{"img":"' + array[i].split('&')[0] + '"}';
+		if(i != count - 1) json += ",";
 
 		chrome.downloads.download({
-			"url": arr[i].split('&')[0], "filename": dir + "/" + getFileName(i) + ".jpg"
+			"url": array[i].split('&')[0], "filename": getFolderName() + "/" + getFileName(i) + ".jpg"
 		}, function(){ console.log("Complete"); });
 	}
 	json += ']';
